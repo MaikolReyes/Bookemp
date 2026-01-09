@@ -1,6 +1,18 @@
 import Link from "next/link";
 import { adminGetBooks } from "@/app/lib/books.admin";
 
+// 🔴 ESTO ES LO QUE FALTABA
+export const dynamic = "force-dynamic";
+
+type Book = {
+    id: string;
+    title: string;
+    author: string;
+    price: number;
+    active: boolean;
+};
+
+
 export default async function AdminPage() {
     const books = await adminGetBooks();
 
@@ -27,7 +39,7 @@ export default async function AdminPage() {
                     </tr>
                 </thead>
                 <tbody>
-                    {books.map((b: any) => (
+                    {books.map((b: Book) => (
                         <tr key={b.id} className="border-t">
                             <td className="p-3">{b.title}</td>
                             <td>{b.author}</td>
