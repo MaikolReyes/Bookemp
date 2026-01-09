@@ -1,7 +1,9 @@
-import { supabase } from "./supabase";
+import { getSupabase } from "./supabase";
 
 
 export async function getBooks() {
+    const supabase = getSupabase();
+
     const { data, error } = await supabase
         .from("books")
         .select("*")
@@ -16,26 +18,27 @@ export async function getBooks() {
     return data;
 }
 
-
-
 export async function getBookBySlug(slug: string) {
+    const supabase = getSupabase();
+
     const { data, error } = await supabase
-        .from('books')
-        .select('*')
-        .eq('slug', slug)
-        .eq('active', true)
-        .maybeSingle(); // 👈 CLAVE
+        .from("books")
+        .select("*")
+        .eq("slug", slug)
+        .eq("active", true)
+        .maybeSingle();
 
     if (error) {
-        console.error('Error fetching book:', error.message);
+        console.error("Error fetching book:", error.message);
         return null;
     }
 
     return data;
 }
 
-
 export async function getBooksByCategory(category: string) {
+    const supabase = getSupabase();
+
     const { data, error } = await supabase
         .from("books")
         .select("*")
