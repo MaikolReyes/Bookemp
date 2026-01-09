@@ -1,8 +1,16 @@
+import { getSupabaseAdmin } from "@/app/lib/supabaseAdmin";
 import { NextResponse } from "next/server";
-import { adminCreateBook } from "@/app/lib/books.admin";
 
-export async function POST(req: Request) {
-    const body = await req.json();
-    await adminCreateBook(body);
-    return NextResponse.json({ ok: true });
+export async function GET() {
+    const supabase = getSupabaseAdmin();
+
+    const { data, error } = await supabase
+        .from("books")
+        .select();
+
+    if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data);
 }

@@ -1,7 +1,13 @@
-export default function EditarPage() {
+interface Props {
+    params: {
+        id: string;
+    };
+}
+
+export default function EditarPage({ params }: Props) {
     return (
         <div>
-            Editar página
+            Editando ID: {params.id}
         </div>
     );
 }
