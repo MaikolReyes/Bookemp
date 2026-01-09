@@ -30,7 +30,7 @@ export async function POST(req: Request) {
                     failure: "http://localhost:3000/pago-fallido",
                     pending: "http://localhost:3000/pago-pendiente",
                 },
-                notification_url: "http://localhost:3000/api/webhook/mercadopago", // ⭐
+                notification_url: "https://bookemp.vercel.app/api/webhook/mercadopago", // ⭐
             },
         });
 
