@@ -21,6 +21,11 @@ export async function POST(req: Request) {
 
         console.log("🔔 WEBHOOK:", body);
 
+        // ✅ IGNORAR TODO LO QUE NO SEA PAYMENT
+        if (body.topic !== "payment") {
+            return NextResponse.json({ ok: true });
+        }
+
         if (body.type === "payment") {
             const paymentId = body.data.id;
 

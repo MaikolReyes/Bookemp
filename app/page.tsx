@@ -1,10 +1,13 @@
 // app/page.tsx
+export const dynamic = "force-dynamic";
+
 import Benefits from "./components/home/Benefits";
 import BlogPreview from "./components/home/BlogPreview";
 import Categories from "./components/home/Categories";
 import FeaturedBooks from "./components/home/FeaturedBooks";
 import Hero from "./components/home/Hero";
 import Newsletter from "./components/home/NewsLetter";
+
 
 
 export default function Home() {

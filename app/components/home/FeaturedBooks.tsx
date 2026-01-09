@@ -2,8 +2,6 @@
 import { getBooks } from "@/app/lib/books.service";
 import BookGrid from "../books/BookGrid";
 
-export const dynamic = "force-dynamic";
-
 export default async function FeaturedBooks() {
     
     const books = await getBooks();
