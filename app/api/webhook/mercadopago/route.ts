@@ -26,41 +26,69 @@ export async function POST(req: Request) {
             return NextResponse.json({ ok: true });
         }
 
-        if (body.type === "payment") {
-            const paymentId = body.data.id;
+        const paymentId = body.resource;
 
-            const client = new MercadoPagoConfig({
-                accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
-            });
+        const client = new MercadoPagoConfig({
+            accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
+        });
 
-            const payment = new Payment(client);
+        const payment = new Payment(client);
 
-            const result = (await payment.get({
-                id: paymentId,
-            })) as MercadoPagoPayment;
+        const result = (await payment.get({
+            id: paymentId,
+        })) as MercadoPagoPayment;
 
-            console.log("💰 PAYMENT INFO:", result);
+        console.log("💰 PAYMENT INFO:", result);
 
-            if (result.status === "approved") {
-                const supabase = getSupabaseAdmin();
+        if (result.status === "approved") {
+            const supabase = getSupabaseAdmin();
 
-                const order = {
-                    mp_payment_id: result.id,
-                    status: result.status,
-                    total: result.transaction_amount,
-                    currency: result.currency_id,
-                    payer_email: result.payer?.email ?? null,
-                    items: result.additional_info?.items ?? [],
+            // 1️⃣ GUARDAR ORDEN
+            const order = {
+                mp_payment_id: result.id,
+                status: result.status,
+                total: result.transaction_amount,
+                currency: result.currency_id,
+                payer_email: result.payer?.email ?? null,
+                items: result.additional_info?.items ?? [],
+            };
+
+            const { error: orderError } = await supabase
+                .from("orders")
+                .insert(order);
+
+            if (orderError) {
+                console.error("❌ ERROR GUARDANDO ORDEN:", orderError);
+            } else {
+                console.log("✅ ORDEN GUARDADA");
+            }
+
+            // 2️⃣ DESCONTAR STOCK
+            const items = result.additional_info?.items ?? [];
+
+            for (const item of items) {
+                const { id, quantity } = item as {
+                    id: string;      // slug del libro
+                    quantity: number;
                 };
 
-                const { error } = await supabase
-                    .from("orders")
-                    .insert(order);
+                const { error: stockError } = await supabase.rpc(
+                    "decrement_stock",
+                    {
+                        book_slug: id,
+                        qty: quantity,
+                    }
+                );
 
-                if (error) {
-                    console.error("❌ DB ERROR:", error);
+                if (stockError) {
+                    console.error(
+                        `❌ ERROR DESCONTANDO STOCK (${id})`,
+                        stockError
+                    );
                 } else {
-                    console.log("✅ ORDEN GUARDADA");
+                    console.log(
+                        `📦 STOCK DESCONTADO → ${id} (-${quantity})`
+                    );
                 }
             }
         }

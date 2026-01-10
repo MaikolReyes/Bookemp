@@ -5,6 +5,7 @@ import { Lato, Montserrat, Open_Sans, Poppins } from "next/font/google";
 import "./globals.css";
 
 
+
 export const lato = Lato({
   subsets: ["latin"],
   weight: ["300", "400", "700", "900"],

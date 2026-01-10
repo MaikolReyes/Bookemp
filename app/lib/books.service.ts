@@ -18,6 +18,21 @@ export async function getBooks() {
     return data;
 }
 
+export async function getBestSellers() {
+    const supabase = getSupabase();
+
+    const { data, error } = await supabase
+        .from("books")
+        .select("*")
+        .eq("is_best_seller", true)
+        .eq("active", true)
+        .order("created_at", { ascending: false });
+
+    if (error) return [];
+    return data;
+}
+
+
 export async function getBookBySlug(slug: string) {
     const supabase = getSupabase();
 

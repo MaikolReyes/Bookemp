@@ -7,6 +7,11 @@ import Categories from "./components/home/Categories";
 import FeaturedBooks from "./components/home/FeaturedBooks";
 import Hero from "./components/home/Hero";
 import Newsletter from "./components/home/NewsLetter";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+
+config.autoAddCss = false;
+
 
 
 

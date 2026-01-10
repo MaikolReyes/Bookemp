@@ -16,11 +16,11 @@ export default function AddToCartButton(props: Props) {
 
     return (
         <Button
-            className="cursor-pointer"
+            className="cursor-pointer block mt-4 text-center bg-orange-500 text-white py-2 rounded mx-auto"
             variant="secondary"
             onClick={() => addItem(props)}
         >
-            Agregar al carrito
+            Comprar
         </Button>
     );
 }
